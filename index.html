@@ -103,6 +103,49 @@ body.retro .main .hero{padding:7px}
 }
 @media(max-width:390px){body.retro .retro-identity small{font-size:8px}body.retro .main .hero p{font-size:11px}.top-actions{gap:4px}.skin button{padding:7px}}
 @media(prefers-reduced-motion:reduce){.voice-viz i{animation:none!important;height:10px}.voice-viz{transition:none}}
+
+/* A single uncluttered OS window instead of stacked webpage sections */
+body.retro .top{height:48px;padding:0 8px;background:transparent;border:0;justify-content:flex-end}
+body.retro .top .brand{display:none}
+body.retro .top-actions{background:#c0c0c0;border:2px solid;border-color:#fff #555 #555 #fff;padding:3px 7px}
+body.retro .footer{display:none}
+body.retro .main{margin:10px auto 25px;height:min(630px,calc(100dvh - 95px));max-width:710px}
+body.retro .hero{display:none!important}
+body.retro .chat{margin:0}
+body.retro .retro-identity{padding:8px 12px}
+body.retro .retro-status{padding:6px 0 0}
+.retro-welcome{display:none}
+body.retro .retro-welcome{display:block;border-left:2px solid #183d89;padding:0 0 0 10px;margin-bottom:14px;max-width:520px}
+body.retro .retro-welcome-label{font:700 12px Tahoma,sans-serif;color:#153577;margin:0 0 8px}
+body.retro .retro-welcome p{font:13px/1.65 Tahoma,sans-serif;margin:0 0 8px;color:#222}
+body.retro .retro-welcome span{color:#aab0b6;font-size:12px}
+body.retro .messages{padding:20px 15px}
+body.retro .suggestions{margin:5px 0 10px}
+body.retro .below{font-size:9px}
+.voice-panel{position:fixed;inset:0;background:#131b1c95;backdrop-filter:blur(6px);z-index:20;display:grid;place-items:center;padding:16px}
+.voice-card{width:min(440px,100%);background:#fbfbf8;color:#1b211e;border:1px solid #d9ded8;border-radius:17px;padding:23px;box-shadow:0 25px 70px #101b1c35;font:14px/1.5 "DM Sans",sans-serif}
+.voice-card-head{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.voice-card h2{font:500 25px "Space Grotesk",sans-serif;letter-spacing:-.04em;margin:0}
+.voice-card p{color:#616963;font-size:13px}
+.voice-card label{display:block;font-size:12px;margin:20px 0 8px}
+.voice-card select{width:100%;min-height:44px;border:1px solid #c7cec9;background:white;border-radius:8px;padding:9px;color:#222;font:13px "DM Sans",sans-serif}
+.voice-card-head button{background:transparent;border:0;font-size:22px}
+.voice-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.voice-actions button{background:white;color:#222;border:1px solid #c8cdc8;border-radius:8px;padding:10px 13px}
+.voice-actions #voice-done{background:#17231c;color:white;border-color:#17231c}
+.voice-card small{display:block;color:#747a73;margin-top:15px;font-size:11px}
+body.retro .voice-card{border-radius:0;background:#c0c0c0;border:3px solid;border-color:#fff #555 #555 #fff;font-family:Tahoma,sans-serif}
+body.retro .voice-card h2{font:700 17px Tahoma,sans-serif}
+body.retro .voice-card select,body.retro .voice-actions button{border-radius:0}
+@media(max-width:600px){
+body.retro .main{margin:6px auto;max-height:calc(100dvh - 75px);height:calc(100dvh - 75px)}
+body.retro .top{height:47px;padding:0}
+body.retro .messages{padding:12px 9px}
+body.retro .retro-welcome p{font-size:12px}
+body.retro .suggestions{flex-wrap:wrap}
+body.retro .retro-status{font-size:8px}
+.voice-card{padding:20px}
+}
 </style>
 </head>
 <body>
@@ -113,8 +156,8 @@ body.retro .main .hero{padding:7px}
 <div class="retro-title" aria-hidden="true"><span>🌚 ask_eve.exe — ivonne_aldaz [online]</span><span class="win-controls"><span>_</span><span>□</span><span>×</span></span></div>
 <div class="retro-identity"><span class="moon-face">🌚</span><span><strong>eve ✦</strong><small>● online · moon-powered · grounded in ivonne’s work</small></span></div>
 <section class="hero" id="hero"><div class="eyebrow mono">INTRODUCING EVE / VERSION 01</div><h1>Hello, I'm Eve<i>.</i></h1><p>A different way to get to know Ivonne Aldaz. Ask me about her work, experience, creative process, or the things she's building.</p><div class="status mono"><span class="dot"></span> ONLINE · PURPOSE-BUILT, NOT ALL-KNOWING</div></section>
-<section class="chat" aria-label="Ask Eve conversation"><div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"></div><div class="suggestions" id="suggestions"><button type="button" data-question="What has Ivonne built with AI?">What has she built? ↗</button><button type="button" data-question="Walk me through Ivonne's professional experience.">Explore her experience ↗</button><button type="button" data-question="What makes Ivonne's approach different?">How does she think? ↗</button></div><form class="composer" id="form"><input id="prompt" maxlength="1500" autocomplete="off" aria-label="Question for Eve" placeholder="Ask anything about Ivonne..." required><button class="mic" id="mic" type="button" title="Dictate a question" aria-label="Dictate a question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button><button class="send" id="send" type="submit" aria-label="Send question">↑</button></form><div class="below"><span>Built around Ivonne’s CV and selected work. AI can make mistakes.</span><span><button id="read" type="button" aria-pressed="false">Read aloud: off</button> · <button id="reset" type="button">Clear chat</button></span></div></section><div class="retro-status mono">ASK_EVE V2.1 · MOON-POWERED · AUDIO OPTIONAL</div>
-</main><footer class="footer mono"><span>© IVONNE ALDAZ · ASK EVE</span><span class="foot-label">SAME INTELLIGENCE, TWO INTERFACES.</span><span><a href="https://ivonnealdaz.com" rel="noopener">PORTFOLIO ↗</a> · <a href="https://lab.ivonnealdaz.com" rel="noopener">LAB ↗</a></span></footer>
+<section class="chat" aria-label="Ask Eve conversation"><div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"><div class="retro-welcome" id="retro-welcome"><div class="retro-welcome-label">eve ✦</div><p>hey ✦ i'm eve — ask me about ivonne's work, what drives her, or what she's building.</p><span>♡ 🌚 ✦</span></div></div><div class="suggestions" id="suggestions"><button type="button" data-question="What has Ivonne built with AI?">What has she built? ↗</button><button type="button" data-question="Walk me through Ivonne's professional experience.">Explore her experience ↗</button><button type="button" data-question="What makes Ivonne's approach different?">How does she think? ↗</button></div><form class="composer" id="form"><input id="prompt" maxlength="1500" autocomplete="off" aria-label="Question for Eve" placeholder="Ask anything about Ivonne..." required><button class="mic" id="mic" type="button" title="Dictate a question" aria-label="Dictate a question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button><button class="send" id="send" type="submit" aria-label="Send question">↑</button></form><div class="below"><span>Built around Ivonne’s CV and selected work. AI can make mistakes.</span><span><button id="read" type="button" aria-pressed="false">Read aloud: off</button> · <button id="voice-settings" type="button">Voice</button> · <button id="reset" type="button">Clear chat</button></span></div></section><div class="retro-status mono">ASK_EVE V2.1 · MOON-POWERED · AUDIO OPTIONAL</div>
+</main><div class="voice-panel hidden" id="voice-panel" role="dialog" aria-modal="true" aria-labelledby="voice-title"><div class="voice-card"><div class="voice-card-head"><h2 id="voice-title">Eve's voice</h2><button id="voice-close" type="button" aria-label="Close voice settings">×</button></div><p>Choose from the voices available on your device. Quality depends on your browser and operating system.</p><label for="voice-select">Available voices</label><select id="voice-select"></select><div class="voice-actions"><button id="voice-preview" type="button">▶ Preview voice</button><button id="voice-done" type="button">Done</button></div><small id="voice-note" aria-live="polite"></small></div></div><footer class="footer mono"><span>© IVONNE ALDAZ · ASK EVE</span><span class="foot-label">SAME INTELLIGENCE, TWO INTERFACES.</span><span><a href="https://ivonnealdaz.com" rel="noopener">PORTFOLIO ↗</a> · <a href="https://lab.ivonnealdaz.com" rel="noopener">LAB ↗</a></span></footer>
 </div>
 <div class="overlay hidden" id="overlay"><section class="tour" role="dialog" aria-modal="true" aria-labelledby="tour-title"><div class="tour-top"><span class="mono step" id="step">01 / 03</span><button class="icon-btn" type="button" id="close" aria-label="Close introduction">×</button></div><h2 id="tour-title"></h2><p id="tour-body"></p><div class="tour-bottom"><button type="button" id="skip">Skip intro</button><button type="button" class="next" id="next">Continue →</button></div></section></div>
 <script>
@@ -132,15 +175,26 @@ function setSkin(value){skin=value;document.body.classList.toggle('retro',skin==
 function setTour(){var s=stages[step];$('step').textContent='0'+(step+1)+' / 03';$('tour-title').textContent=s.title;$('tour-body').textContent=s.body;$('next').textContent=step===stages.length-1?'Meet Eve →':'Continue →'}
 function showTour(){step=0;setTour();$('overlay').classList.remove('hidden');$('close').focus()}
 function hideTour(){ $('overlay').classList.add('hidden');try{localStorage.setItem('eve_intro_seen','1')}catch(e){}$('prompt').focus();chime(540)}
-var currentUtterance=null,currentPlayback=null,preferredVoice=null,availableVoices=[];
-function voiceChoices(){if(!('speechSynthesis' in window))return;availableVoices=window.speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var natural=availableVoices.find(function(v){return /Samantha|Ava|Aria|Jenny|Siri|Natural|Neural|Google US English|Google UK English Female/i.test(v.name)});preferredVoice=natural||availableVoices.find(function(v){return v.default})||availableVoices[0]||null}
+var currentUtterance=null,currentPlayback=null,preferredVoice=null,availableVoices=[],selectedVoiceId='';
+try{selectedVoiceId=localStorage.getItem('eve_selected_voice')||''}catch(e){}
+function voiceChoices(){
+if(!('speechSynthesis' in window))return;
+availableVoices=window.speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});
+var pick=availableVoices.find(function(v){return v.voiceURI===selectedVoiceId})||availableVoices.find(function(v){return /Samantha|Ava|Aria|Jenny|Siri|Natural|Neural|Google US English|Google UK English Female/i.test(v.name)})||availableVoices.find(function(v){return v.default})||availableVoices[0]||null;
+preferredVoice=pick;
+var select=$('voice-select');if(!select)return;
+select.replaceChildren();
+if(!availableVoices.length){var none=document.createElement('option');none.textContent='No English voices available';none.value='';select.appendChild(none);select.disabled=true;return}
+select.disabled=false;availableVoices.forEach(function(v){var o=document.createElement('option');o.value=v.voiceURI;o.textContent=v.name+' ('+v.lang+')'+(v.localService?' · device':' · browser');select.appendChild(o)});
+select.value=pick.voiceURI;
+}
 if('speechSynthesis' in window){voiceChoices();window.speechSynthesis.addEventListener('voiceschanged',voiceChoices)}
 function cleanSpeech(text){return text.replace(/\*\*/g,'').replace(/[\u2197\u2192]/g,'').replace(/\s+/g,' ').trim()}
 function updatePlayback(el,playing){if(!el)return;el.classList.toggle('is-speaking',playing);var btn=el.querySelector('.listen-btn');if(btn){btn.setAttribute('aria-label',playing?'Stop audio':'Play audio response');btn.textContent=playing?'■ Stop':'▶ Listen'}}
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();updatePlayback(currentPlayback,false);currentPlayback=null;currentUtterance=null}
 function playSpeech(text,el){if(!('speechSynthesis' in window))return;var wasPlaying=currentPlayback===el&&window.speechSynthesis.speaking;stopSpeech();if(wasPlaying)return;voiceChoices();var speech=new SpeechSynthesisUtterance(cleanSpeech(text));speech.lang='en-US';if(preferredVoice)speech.voice=preferredVoice;speech.rate=.94;speech.pitch=1;speech.volume=1;currentUtterance=speech;currentPlayback=el;speech.onstart=function(){if(currentUtterance===speech)updatePlayback(el,true)};speech.onend=speech.onerror=function(){if(currentUtterance===speech){updatePlayback(el,false);currentPlayback=null;currentUtterance=null}};window.speechSynthesis.speak(speech)}
 function speak(text,el){if(readAloud)playSpeech(text,el)}
-function addMessage(role,text,cls){var el=document.createElement('article');el.className='message '+role+(cls?' '+cls:'');var who=document.createElement('div');who.className='who';who.textContent=role==='user'?'VISITOR':'EVE / AI';var body=document.createElement('div');body.className='body';var parts=text.split(/(\*\*[^*]+\*\*)/g);parts.forEach(function(part){if(/^\*\*[^*]+\*\*$/.test(part)){var strong=document.createElement('strong');strong.textContent=part.slice(2,-2);body.appendChild(strong)}else body.appendChild(document.createTextNode(part))});el.append(who,body);
+function addMessage(role,text,cls){$('retro-welcome').classList.add('hidden');var el=document.createElement('article');el.className='message '+role+(cls?' '+cls:'');var who=document.createElement('div');who.className='who';who.textContent=role==='user'?'VISITOR':'EVE / AI';var body=document.createElement('div');body.className='body';var parts=text.split(/(\*\*[^*]+\*\*)/g);parts.forEach(function(part){if(/^\*\*[^*]+\*\*$/.test(part)){var strong=document.createElement('strong');strong.textContent=part.slice(2,-2);body.appendChild(strong)}else body.appendChild(document.createTextNode(part))});el.append(who,body);
 if(role==='assistant'&&!cls&&text!=='Thinking…'&&'speechSynthesis' in window){var controls=document.createElement('div');controls.className='reply-audio';var btn=document.createElement('button');btn.type='button';btn.className='listen-btn';btn.textContent='▶ Listen';btn.setAttribute('aria-label','Play audio response');btn.addEventListener('click',function(){playSpeech(text,el)});var viz=document.createElement('span');viz.className='voice-viz';viz.setAttribute('aria-hidden','true');for(var i=0;i<13;i++){var bar=document.createElement('i');bar.style.setProperty('--n',String(i));viz.appendChild(bar)}var label=document.createElement('span');label.className='speaking-label';label.textContent='Eve is speaking';controls.append(btn,viz,label);el.appendChild(controls)}
 $('messages').appendChild(el);$('messages').scrollTop=$('messages').scrollHeight;return el}
 function setBusy(value){busy=value;$('send').disabled=value;$('prompt').disabled=value;$('mic').disabled=value;document.querySelectorAll('[data-question]').forEach(function(b){b.disabled=value})}
@@ -148,7 +202,12 @@ async function submit(question){question=(question||'').trim();if(!question||bus
 $('form').addEventListener('submit',function(e){e.preventDefault();submit($('prompt').value)});document.querySelectorAll('[data-question]').forEach(function(b){b.addEventListener('click',function(){submit(b.getAttribute('data-question'))})});
 $('future').addEventListener('click',function(){setSkin('future')});$('retro').addEventListener('click',function(){setSkin('retro')});$('sound').addEventListener('click',function(){sounds=!sounds;$('sound').setAttribute('aria-pressed',String(sounds));$('sound').title=sounds?'Disable interface sounds':'Enable interface sounds';chime(570)});
 $('read').addEventListener('click',function(){readAloud=!readAloud;if(!readAloud)stopSpeech();$('read').textContent='Read aloud: '+(readAloud?'on':'off');$('read').setAttribute('aria-pressed',String(readAloud))});
-$('reset').addEventListener('click',function(){messages=[];$('messages').replaceChildren();$('hero').classList.remove('hidden');$('suggestions').classList.remove('hidden');stopSpeech();$('prompt').value='';$('prompt').focus()});
+$('reset').addEventListener('click',function(){messages=[];$('messages').replaceChildren();var welcome=document.createElement('div');welcome.id='retro-welcome';welcome.className='retro-welcome';welcome.innerHTML='<div class="retro-welcome-label">eve ✦</div><p>hey ✦ i\'m eve — ask me about ivonne\'s work, what drives her, or what she\'s building.</p><span>♡ 🌚 ✦</span>';$('messages').appendChild(welcome);$('hero').classList.remove('hidden');$('suggestions').classList.remove('hidden');stopSpeech();$('prompt').value='';$('prompt').focus()});
+$('voice-settings').addEventListener('click',function(){voiceChoices();$('voice-panel').classList.remove('hidden');$('voice-select').focus()});
+function closeVoice(){stopSpeech();$('voice-panel').classList.add('hidden');$('voice-settings').focus()}
+$('voice-close').addEventListener('click',closeVoice);$('voice-done').addEventListener('click',closeVoice);
+$('voice-select').addEventListener('change',function(){selectedVoiceId=this.value;preferredVoice=availableVoices.find(function(v){return v.voiceURI===selectedVoiceId})||null;try{localStorage.setItem('eve_selected_voice',selectedVoiceId)}catch(e){}stopSpeech()});
+$('voice-preview').addEventListener('click',function(){var voice=preferredVoice;if(!voice){$('voice-note').textContent='No voice is available in this browser.';return}playSpeech("Hi, I'm Eve. I'm here to tell you a little more about Ivonne, her work, and the things she's building.",null);$('voice-note').textContent='Playing '+voice.name+'. If it still sounds synthetic, the next step is a neural voice service.'});
 $('help').addEventListener('click',showTour);$('close').addEventListener('click',hideTour);$('skip').addEventListener('click',hideTour);$('next').addEventListener('click',function(){if(step===stages.length-1)hideTour();else{step++;setTour();chime(460)}});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('overlay').classList.contains('hidden'))hideTour()});
 var Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(Recognition){$('mic').addEventListener('click',function(){if(recognition){recognition.stop();return}recognition=new Recognition();recognition.lang='en-US';recognition.interimResults=false;recognition.onresult=function(e){$('prompt').value=e.results[0][0].transcript;$('prompt').focus()};recognition.onend=function(){$('mic').classList.remove('recording');recognition=null};recognition.onerror=function(){$('mic').classList.remove('recording')};recognition.start();$('mic').classList.add('recording')})}else{$('mic').disabled=true;$('mic').title='Speech recognition is not supported by this browser'}
 try{setSkin(localStorage.getItem('eve_skin')==='retro'?'retro':'future');if(localStorage.getItem('eve_intro_seen')!=='1')showTour()}catch(e){setSkin('future');showTour()}
