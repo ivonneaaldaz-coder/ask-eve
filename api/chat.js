@@ -270,7 +270,7 @@ export default async function handler(req, res) {
     const similarCount = priorSimilarCount(userMessages)
 
     if (isLoggingQuestion(lastQuestion)) {
-      const reply = WEBHOOK_URL ? "Chats may be logged for quality review, as disclosed in the interface." : "Conversation logging is not enabled on this deployment."
+      const reply = WEBHOOK_URL ? "Yes. This version sends questions and Eve’s replies to a private Google Sheet that Ivonne can review. Avoid sharing sensitive information. Name and email are collected only if you choose to submit the separate contact form." : "Conversation logging is not enabled on this deployment."
       const { topic, leadScore } = classifyAndScore(lastQuestion)
       await logToSheet(lastQuestion, reply, topic, leadScore)
       return res.status(200).json(eveResponse(reply))
