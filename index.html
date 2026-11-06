@@ -189,7 +189,7 @@ select.disabled=false;availableVoices.forEach(function(v){var o=document.createE
 select.value=pick.voiceURI;
 }
 if('speechSynthesis' in window){voiceChoices();window.speechSynthesis.addEventListener('voiceschanged',voiceChoices)}
-function cleanSpeech(text){return text.replace(/\*\*/g,'').replace(/[\u2197\u2192]/g,'').replace(/\s+/g,' ').trim()}
+function cleanSpeech(text){return text.replace(/\*\*/g,'').replace(/[\u2197\u2192]/g,'').replace(/\bIvonne(?=('s|’s)?\b)/gi,'Eve-on').replace(/\s+/g,' ').trim()}
 function updatePlayback(el,playing){if(!el)return;el.classList.toggle('is-speaking',playing);var btn=el.querySelector('.listen-btn');if(btn){btn.setAttribute('aria-label',playing?'Stop audio':'Play audio response');btn.textContent=playing?'■ Stop':'▶ Listen'}}
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();updatePlayback(currentPlayback,false);currentPlayback=null;currentUtterance=null}
 function playSpeech(text,el){if(!('speechSynthesis' in window))return;var wasPlaying=currentPlayback===el&&window.speechSynthesis.speaking;stopSpeech();if(wasPlaying)return;voiceChoices();var speech=new SpeechSynthesisUtterance(cleanSpeech(text));speech.lang='en-US';if(preferredVoice)speech.voice=preferredVoice;speech.rate=.94;speech.pitch=1;speech.volume=1;currentUtterance=speech;currentPlayback=el;speech.onstart=function(){if(currentUtterance===speech)updatePlayback(el,true)};speech.onend=speech.onerror=function(){if(currentUtterance===speech){updatePlayback(el,false);currentPlayback=null;currentUtterance=null}};window.speechSynthesis.speak(speech)}
