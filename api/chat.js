@@ -351,7 +351,7 @@ export default async function handler(req, res) {
 
 
     const recentMessages = messages.slice(-10)
-    const systemPrompt = buildSystem(safeSearchContext) + '\n\nKeep replies clear and conversational. Aim for 120–250 words for typical questions, and finish every sentence before stopping. Avoid excessive detail and long lists unless requested.'
+    const systemPrompt = buildSystem(safeSearchContext) + '\n\nKeep replies clear and conversational. Aim for 35–90 words in ordinary answers, up to 180 only for complex questions, and finish every sentence before stopping. Do not end with a question, invitation to continue, or engagement prompt. Only ask a clarifying question when essential. Invite contact once only if the visitor explicitly asks about working with or contacting Ivonne or wants to discuss building Eve.'
     const model = process.env.EVE_MODEL || 'claude-haiku-4-5-20251001'
     let workingMessages = [...recentMessages]
     let reply = ''
