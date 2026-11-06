@@ -349,36 +349,58 @@ export default async function handler(req, res) {
       return res.status(200).json(eveResponse(reply))
     }
 
+
     const recentMessages = messages.slice(-10)
+    const systemPrompt = buildSystem(safeSearchContext) + '\n\nKeep replies clear and conversational. Aim for 120–250 words for typical questions, and finish every sentence before stopping. Avoid excessive detail and long lists unless requested.'
+    const model = process.env.EVE_MODEL || 'claude-haiku-4-5-20251001'
+    let workingMessages = [...recentMessages]
+    let reply = ''
+    let complete = false
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 220,
-        system: buildSystem(safeSearchContext),
-        messages: recentMessages
+    // Claude may stop at a token boundary mid-sentence. Continue server-side,
+    // then return a single complete answer to the browser.
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: attempt === 0 ? 900 : 500,
+          system: systemPrompt,
+          messages: workingMessages
+        })
       })
-    })
-
-    const data = await response.json()
-
-    if (data.error || !data.content?.[0]?.text) {
-      console.error('Anthropic error:', data.error || data)
-      return res.status(502).json({ error: 'AI response failed' })
+      const data = await response.json()
+      const segment = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('')
+      if (!response.ok || data.error || !segment) {
+        console.error('Anthropic error:', data.error || data)
+        return res.status(502).json({ error: 'AI response failed' })
+      }
+      reply += segment
+      if (data.stop_reason !== 'max_tokens') { complete = true; break }
+      // Continue the unfinished assistant message without making the browser
+      // send an extra user question or displaying an incomplete answer.
+      workingMessages = [
+        ...recentMessages,
+        { role: 'assistant', content: reply },
+        { role: 'user', content: 'Please continue exactly where you stopped and finish the response. Do not repeat earlier text.' }
+      ]
     }
 
-    const reply = data.content[0].text
+    if (!complete) {
+      console.error('Eve response remained truncated after bounded continuation')
+      return res.status(502).json({ error: 'Eve could not complete her reply. Please try again.' })
+    }
+
     const { topic, leadScore } = classifyAndScore(lastQuestion)
 
     await logToSheet(lastQuestion, reply, topic, leadScore)
 
-    return res.status(200).json(data)
+    return res.status(200).json(eveResponse(reply))
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Request failed' })
