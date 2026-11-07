@@ -294,7 +294,7 @@ export default async function handler(req, res) {
     }
 
     if (isQuestionLimitQuestion(lastQuestion)) {
-      const reply = "You can ask up to 15 questions in this conversation. After that, the session closes. Eve also has usage limits to keep the experience available for everyone. She's built for exploring Ivonne's background and projects, not unlimited general-purpose chatting."
+      const reply = "You can ask up to 15 questions per conversation, with up to 30 questions and 10 voice generations in separate 24-hour windows. Each window begins with your first request of that type; refreshing or clearing chat won't reset it."
       await logToSheet(lastQuestion, reply, 'General', 1)
       return res.status(200).json(eveResponse(reply))
     }
