@@ -17,7 +17,7 @@ export default async function handler(req,res) {
     console.error('Daily voice quota unavailable:',error.message);
     return res.status(503).json({error:'Voice playback is temporarily unavailable. Please try again shortly.'});
   }
-  if (!daily.allowed) return quotaError(res,daily.reason);
+  if (!daily.allowed) return quotaError(res,daily.reason,daily.retryAfter);
   // Preserve original name in visible answers; apply an audio-only phonetic hint.
   const spoken=text.replace(/\*\*/g,'').replace(/\bIvonne\b/gi,'Eve-on').replace(/\s+/g,' ').trim();
   try{
