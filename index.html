@@ -344,7 +344,7 @@ $('contact-form').addEventListener('submit',async function(e){
     var body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\n'+note+'\n\nSent from Ask Eve');
     $('contact-result').textContent='Your email app will open with a draft. Please press Send there to deliver it.';
     window.location.href='mailto:hello@ivonnealdaz.com?subject='+subject+'&body='+body;
-  }catch(err){$('contact-result').textContent=err.message+' You can also email hello@ivonnealdaz.com.'}
+  }catch(err){$('contact-result').textContent=err.message||'Unable to send your message. Please email hello@ivonnealdaz.com.'}
   finally{btn.disabled=false}
 });
 $('help').addEventListener('click',showTour);$('close').addEventListener('click',hideTour);$('skip').addEventListener('click',hideTour);$('next').addEventListener('click',function(){if(step===stages.length-1)hideTour();else{step++;setTour();chime(460)}});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('overlay').classList.contains('hidden'))hideTour()});
