@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ask Eve | Quota QA</title><style>
+:root{font-family:system-ui,sans-serif;color:#18231e;background:#f6f7f3}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px}
+main{background:white;width:min(530px,100%);border:1px solid #e0e5dc;border-radius:22px;padding:clamp(22px,5vw,42px)}
+h1{font-size:26px;letter-spacing:-.05em}p{line-height:1.6;color:#57655c}
+button{border:0;background:#1a2b20;color:white;padding:13px 20px;border-radius:40px;font:inherit;cursor:pointer;min-height:44px}
+button:disabled{opacity:.5}
+#result{font-family:ui-monospace,monospace;background:#f1f4ed;border-radius:10px;padding:14px;white-space:pre-wrap;margin-top:22px;min-height:85px}
+small{display:block;color:#66756c;line-height:1.5;margin-top:20px}
+a{color:#214e35}
+</style></head><body><main><div aria-hidden="true">🌚</div><h1>Ask Eve · Daily quota QA</h1>
+<p>This is a <strong>protected Preview test</strong>. Its Redis counters are completely separate from your real visitor allowance. It does not generate AI answers or voice audio.</p>
+<p>Click <strong>Test one request</strong> three times. The first two should be allowed (200), the third blocked (429). Refresh the page and click again: it should remain blocked.</p>
+<button id="run" type="button">Test one request</button>
+<div id="result" role="status" aria-live="polite">Ready. No test requests sent yet.</div>
+<small>Runs against Redis using the same atomic quota function as the production chat, with a dedicated key namespace and limit of 2. The 15 requests/minute firewall still applies. This page is not included in production.</small>
+</main><script>
+let clicks=0;document.getElementById('run').addEventListener('click',async()=>{
+const button=document.getElementById('run'),result=document.getElementById('result');button.disabled=true;
+try{const response=await fetch('/api/quota-test',{method:'POST',cache:'no-store'});const data=await response.json();
+clicks++;result.textContent='Test #'+clicks+'\nHTTP '+response.status+'\n'+(data.message||data.error||JSON.stringify(data));}
+catch(err){result.textContent='Test failed: '+err.message}
+finally{button.disabled=false}
+});</script></body></html>
