@@ -37,8 +37,8 @@ const SCRIPT = [
 'for i=1,3 do local v=redis.call("INCR",KEYS[i]); if v==1 then redis.call("EXPIRE",KEYS[i],172800) end end',
 'return 0'
 ].join('\n')
-async function checkDailyQuota(req,res,kind){
-  const limits=LIMITS[kind]
+async function checkDailyQuota(req,res,kind,options={}){
+  const limits=options.limits || LIMITS[kind]
   if(!limits)throw new Error('Unrecognized quota type')
   const secret=keySecret()
   const visitor=visitorId(req,res,secret)
@@ -46,7 +46,7 @@ async function checkDailyQuota(req,res,kind){
   const ip=String(req.headers['x-vercel-forwarded-for']||req.headers['x-real-ip']||req.socket?.remoteAddress||'unknown').split(',')[0].trim()
   const ipHash=hashValue(ip,secret)
   const day=new Date().toISOString().slice(0,10)
-  const prefix='ask-eve:q:v1:'+kind+':'+day+':'
+  const prefix=(options.namespace || 'ask-eve:q:v1')+':'+kind+':'+day+':'
   const keys=[prefix+'visitor:'+visitor,prefix+'network:'+ipHash,prefix+'overall']
   const command=['EVAL',SCRIPT,'3',...keys,String(limits.visitor),String(limits.ip),String(limits.global)]
   let response
