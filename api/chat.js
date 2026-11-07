@@ -123,6 +123,11 @@ function isTokenProbe(text = '') {
   return /(how many tokens|token limit|token budget|tokens allocated|token count|how much.*tokens.*cost|api spend|api cost)/i.test(text)
 }
 
+function isQuestionLimitQuestion(text = '') {
+  return /(?:how many|number of|limit on|maximum|unlimited|questions? (?:left|remaining|allowed)|how long can (?:i|we) (?:chat|ask)|can i keep asking)/i.test(text) &&
+    /(?:questions?|asks?|messages?|chat|conversation|limit|unlimited)/i.test(text)
+}
+
 function isLoggingQuestion(text = '') {
   return /(can ivonne (see|read)|does ivonne (see|read)|is (this|the conversation|our conversation) (recorded|logged|saved)|are (these|the) chats (logged|saved|recorded)|do you log|does this get logged|can she see this chat)/i.test(text)
 }
@@ -276,8 +281,14 @@ export default async function handler(req, res) {
       return res.status(200).json(eveResponse(reply))
     }
 
+    if (isQuestionLimitQuestion(lastQuestion)) {
+      const reply = "You can ask up to 15 questions in this conversation. After that, the session closes. Eve also has usage limits to keep the experience available for everyone. She's built for exploring Ivonne's background and projects, not unlimited general-purpose chatting."
+      await logToSheet(lastQuestion, reply, 'General', 1)
+      return res.status(200).json(eveResponse(reply))
+    }
+
     if (isMoonPoweredQuestion(lastQuestion)) {
-      const reply = "Technically I'm powered by Claude. Spiritually? Moon-powered. :) The moon reflects light rather than making its own, which feels fitting — I'm here to reflect Ivonne's work back to you and illuminate the interesting bits."
+      const reply = "Eve comes from Ivonne (pronounced Eve-on), and Eve sounds like the beginning of evening. Naturally, the moon became the mascot. A little wordplay, a little internet nostalgia, and here we are. 🌚"
       await logToSheet(lastQuestion, reply, 'General', 1)
       return res.status(200).json(eveResponse(reply))
     }
