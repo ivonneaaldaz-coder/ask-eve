@@ -177,6 +177,34 @@ body.retro .retro-desktop-links{position:static;margin:0 13px 12px auto;justify-
 body.retro .main{height:calc(100dvh - 118px);max-height:calc(100dvh - 118px)}
 body.retro .app{overflow:auto;min-height:100dvh}
 }
+
+/* Final product polish: one purposeful CTA per interface. */
+.future-contact-row{display:flex;justify-content:flex-end;margin:0 0 12px}
+.future-contact{background:transparent;border:1px solid var(--line);border-radius:100px;padding:10px 16px;color:var(--fg);font:500 12px "DM Sans",sans-serif;transition:background .2s,border-color .2s}
+.future-contact:hover{background:var(--panel);border-color:#b6c1b6}
+.future-contact span{margin-left:7px}
+body.retro .future-contact-row{display:none}
+.retro-contact{display:none}
+body.retro .retro-identity{position:relative;gap:9px}
+body.retro .retro-identity>span:nth-child(2){min-width:0;flex:1}
+body.retro .retro-identity small{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;line-height:1.5;margin-top:4px}
+body.retro .online-indicator{display:inline-block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#3da46c;box-shadow:0 0 0 2px #3da46c19,0 0 8px #23be6b99}
+body.retro .meta-separator{color:#888}
+body.retro .retro-contact{display:inline-block;flex:none;background:#c0c0c0;border:2px solid;border-color:#fff #656565 #656565 #fff;border-radius:0;color:#15245b;font:11px Tahoma,Arial,sans-serif;padding:7px 10px;min-height:32px}
+body.retro .retro-contact:active{border-color:#656565 #fff #fff #656565}
+body.retro .below{padding:11px 5px 0;gap:9px 12px;line-height:1.5}
+body.retro .retro-status{padding:11px 6px 6px;line-height:1.5}
+body.retro .main{padding-bottom:11px}
+@media(max-width:600px){
+.future-contact-row{margin:0 0 10px}
+.future-contact{min-height:42px}
+body.retro .retro-identity{flex-wrap:wrap}
+body.retro .retro-contact{margin-left:auto;min-height:38px}
+body.retro .retro-identity small{font-size:9px}
+body.retro .below{padding:9px 4px 0;line-height:1.45}
+body.retro .retro-status{padding:9px 4px 5px}
+body.retro .main{height:calc(100dvh - 118px);max-height:calc(100dvh - 118px)}
+}
 </style>
 </head>
 <body>
@@ -184,10 +212,10 @@ body.retro .app{overflow:auto;min-height:100dvh}
 <header class="top"><div class="brand"><div class="mark moon-mark" aria-hidden="true">🌚</div><div><div class="brand-name">ask eve<span aria-hidden="true">.</span></div><div class="tiny top-label mono">An interactive intelligence</div></div></div>
 <div class="top-actions"><div class="skin" role="group" aria-label="Choose interface skin"><button type="button" id="future" aria-pressed="true">Future</button><button type="button" id="retro" aria-pressed="false">OS 95</button></div><button class="icon-btn" id="sound" title="Enable interface sounds" aria-label="Enable interface sounds" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 5 6 9H3v6h3l5 4V5ZM15 9a5 5 0 0 1 0 6M18 6a9 9 0 0 1 0 12"/></svg></button><button class="icon-btn" id="help" title="About Eve" aria-label="About Eve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.7 2.7 0 0 1 5.3.7c0 2-2.8 2.3-2.8 4.5M12 17h.01"/></svg></button></div></header>
 <main class="main">
-<div class="retro-title" aria-hidden="true"><span>🌚 ask_eve.exe — ivonne_aldaz [online]</span><span class="win-controls"><span>_</span><span>□</span><span>×</span></span></div>
-<div class="retro-identity"><span class="moon-face">🌚</span><span><strong>eve ✦</strong><small>● online · moon-powered · grounded in ivonne’s work</small></span></div>
+<div class="retro-title" aria-hidden="true"><span>🌚 ask_eve.exe by ivonne aldaz [online]</span><span class="win-controls"><span>_</span><span>□</span><span>×</span></span></div>
+<div class="retro-identity"><span class="moon-face">🌚</span><span><strong>eve ✦</strong><small><span class="online-indicator" aria-hidden="true"></span>online <span class="meta-separator">·</span> trained on Ivonne's professional background</small><button type="button" class="retro-contact" id="retro-contact">Contact Ivonne ↗</button></span></div>
 <section class="hero" id="hero"><div class="eyebrow mono">INTRODUCING EVE / VERSION 01</div><h1>Hello, I'm Eve<i>.</i></h1><p>A different way to get to know Ivonne Aldaz. Ask me about her work, experience, creative process, or the things she's building.</p><div class="status mono"><span class="dot"></span> ONLINE · PURPOSE-BUILT, NOT ALL-KNOWING</div></section>
-<section class="chat" aria-label="Ask Eve conversation"><div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"><div class="retro-welcome" id="retro-welcome"><div class="retro-welcome-label">eve ✦</div><p>hey ✦ i'm eve — ask me about ivonne's work, what drives her, or what she's building.</p><span>♡ 🌚 ✦</span></div></div><div class="suggestions" id="suggestions"><button type="button" data-question="What has Ivonne built with AI?">What has she built? ↗</button><button type="button" data-question="Walk me through Ivonne's professional experience.">Explore her experience ↗</button><button type="button" data-question="What makes Ivonne's approach different?">How does she think? ↗</button></div><form class="composer" id="form"><input id="prompt" maxlength="1500" autocomplete="off" aria-label="Question for Eve" placeholder="Ask anything about Ivonne..." required><button class="mic" id="mic" type="button" title="Dictate a question" aria-label="Dictate a question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button><button class="send" id="send" type="submit" aria-label="Send question">↑</button></form><div class="below"><span>AI responses may be inaccurate. Preview chats are sent to Ivonne for review; avoid sensitive information.</span><span><button id="contact-open" type="button">Contact Ivonne</button> · <button id="read" type="button" aria-pressed="false">Read aloud: off</button> · <button id="reset" type="button">Clear chat</button></span></div></section><div class="retro-status mono">ASK_EVE V2.1 · MOON-POWERED · AUDIO OPTIONAL</div>
+<section class="chat" aria-label="Ask Eve conversation"><div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"><div class="retro-welcome" id="retro-welcome"><div class="retro-welcome-label">eve ✦</div><p>hey ✦ i'm eve — ask me about ivonne's work, what drives her, or what she's building.</p><span>♡ 🌚 ✦</span></div></div><div class="suggestions" id="suggestions"><button type="button" data-question="What has Ivonne built with AI?">What has she built? ↗</button><button type="button" data-question="Walk me through Ivonne's professional experience.">Explore her experience ↗</button><button type="button" data-question="What makes Ivonne's approach different?">How does she think? ↗</button></div><div class="future-contact-row"><button type="button" class="future-contact" id="future-contact">Contact Ivonne <span aria-hidden="true">↗</span></button></div><form class="composer" id="form"><input id="prompt" maxlength="1500" autocomplete="off" aria-label="Question for Eve" placeholder="Ask anything about Ivonne..." required><button class="mic" id="mic" type="button" title="Dictate a question" aria-label="Dictate a question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button><button class="send" id="send" type="submit" aria-label="Send question">↑</button></form><div class="below"><span>AI responses may be inaccurate. Conversations are logged for Ivonne’s review; avoid sensitive information.</span><span><button id="read" type="button" aria-pressed="false">Read aloud: off</button> · <button id="reset" type="button">Clear chat</button></span></div></section><div class="retro-status mono">ASK_EVE V2.1 · MOON-POWERED · AUDIO OPTIONAL</div>
 </main><nav class="retro-desktop-links mono" aria-label="Desktop links"><a href="https://ivonnealdaz.com" rel="noopener">PORTFOLIO ↗</a><a href="https://lab.ivonnealdaz.com" rel="noopener">LAB ↗</a></nav><footer class="footer mono"><span>© IVONNE ALDAZ · ASK EVE</span><span class="foot-label">SAME INTELLIGENCE, TWO INTERFACES.</span><span><a href="https://ivonnealdaz.com" rel="noopener">PORTFOLIO ↗</a> · <a href="https://lab.ivonnealdaz.com" rel="noopener">LAB ↗</a></span></footer>
 </div>
 <div class="contact-overlay hidden" id="contact-overlay"><section class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contact-title"><div class="contact-top"><h2 id="contact-title">Talk to Ivonne.</h2><button type="button" id="contact-close" aria-label="Close contact form">×</button></div><p>Curious about her work, interested in collaborating, or want to know how Eve was built? Leave a note.</p><form id="contact-form"><label for="contact-name">Name</label><input id="contact-name" maxlength="100" required autocomplete="name"><label for="contact-email">Email</label><input id="contact-email" type="email" maxlength="180" required autocomplete="email"><label for="contact-note">Message (optional)</label><textarea id="contact-note" rows="3" maxlength="1000" placeholder="What would you like to talk about?"></textarea><input id="contact-honey" name="companyWebsite" tabindex="-1" aria-hidden="true" autocomplete="off" class="hidden"><p class="contact-privacy">Submitting sends your details and message to Ivonne's private Google Sheet so she can follow up. Never share passwords or sensitive information.</p><div class="contact-actions"><button type="button" id="contact-cancel">Cancel</button><button id="contact-submit" type="submit">Send to Ivonne ↗</button></div><div id="contact-result" role="status" aria-live="polite"></div></form></section></div>
@@ -200,7 +228,7 @@ var $=function(id){return document.getElementById(id)};
 var stages=[
 {title:'A CV you can talk to.',body:'I am Eve, an AI assistant created to help you explore Ivonne Aldaz’s experience, projects, capabilities, and creative work. Ask a question or try a suggested prompt.'},
 {title:'Built with context.',body:'I use a curated résumé, project history, and response guidelines rather than unrestricted internet browsing. I am not Ivonne, and I can’t verify experience that isn’t documented.'},
-{title:'Make it yours.',body:'Switch between Future and OS 95 without losing the conversation. Sound and read-aloud are optional and off by default. In this preview, questions and replies are sent to a private Google Sheet that Ivonne can review. Please avoid sharing confidential or sensitive information.'}
+{title:'Make it yours.',body:'Switch between Future and OS 95 without losing the conversation. Sound and read-aloud are optional and off by default. Questions and replies are logged to a private Google Sheet for Ivonne’s review. Please avoid sharing confidential or sensitive information.'}
 ];
 function chime(freq){if(!sounds)return;try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();var o=audioContext.createOscillator(),g=audioContext.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(.025,audioContext.currentTime+.015);g.gain.exponentialRampToValueAtTime(.0001,audioContext.currentTime+.13);o.connect(g);g.connect(audioContext.destination);o.start();o.stop(audioContext.currentTime+.14)}catch(e){}}
 function setSkin(value){skin=value;document.body.classList.toggle('retro',skin==='retro');$('future').classList.toggle('active',skin==='future');$('retro').classList.toggle('active',skin==='retro');$('future').setAttribute('aria-pressed',String(skin==='future'));$('retro').setAttribute('aria-pressed',String(skin==='retro'));try{localStorage.setItem('eve_skin',skin)}catch(e){}chime(value==='retro'?340:620)}
@@ -250,8 +278,9 @@ $('future').addEventListener('click',function(){setSkin('future')});$('retro').a
 $('read').addEventListener('click',function(){readAloud=!readAloud;if(!readAloud)stopSpeech();$('read').textContent='Read aloud: '+(readAloud?'on':'off');$('read').setAttribute('aria-pressed',String(readAloud))});
 $('reset').addEventListener('click',function(){messages=[];$('messages').replaceChildren();var welcome=document.createElement('div');welcome.id='retro-welcome';welcome.className='retro-welcome';welcome.innerHTML='<div class="retro-welcome-label">eve ✦</div><p>hey ✦ i\'m eve — ask me about ivonne\'s work, what drives her, or what she\'s building.</p><span>♡ 🌚 ✦</span>';$('messages').appendChild(welcome);$('hero').classList.remove('hidden');$('suggestions').classList.remove('hidden');stopSpeech();$('prompt').value='';$('prompt').focus()});
 function showContact(){$('contact-result').textContent='';$('contact-overlay').classList.remove('hidden');$('contact-name').focus()}
-function hideContact(){$('contact-overlay').classList.add('hidden');$('contact-open').focus()}
-$('contact-open').addEventListener('click',showContact);
+function hideContact(){$('contact-overlay').classList.add('hidden');(skin==='retro'?$('retro-contact'):$('future-contact')).focus()}
+$('future-contact').addEventListener('click',showContact);
+$('retro-contact').addEventListener('click',showContact);
 $('contact-close').addEventListener('click',hideContact);
 $('contact-cancel').addEventListener('click',hideContact);
 $('contact-form').addEventListener('submit',async function(e){
