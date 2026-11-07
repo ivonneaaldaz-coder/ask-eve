@@ -282,7 +282,7 @@ export default async function handler(req, res) {
       console.error('Daily chat quota unavailable:', error.message)
       return res.status(503).json({ error: 'Eve is temporarily unavailable. Please try again shortly.' })
     }
-    if (!daily.allowed) return quotaError(res, daily.reason)
+    if (!daily.allowed) return quotaError(res, daily.reason, daily.retryAfter)
 
     const similarCount = priorSimilarCount(userMessages)
 
