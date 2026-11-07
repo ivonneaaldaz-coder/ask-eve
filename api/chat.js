@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const { checkDailyQuota, quotaError } = require('./quota')
 
 const WEBHOOK_URL = process.env.EVE_LOG_WEBHOOK_URL || ''
 
@@ -271,6 +272,17 @@ export default async function handler(req, res) {
     if (userMessages.length > 15) {
       return res.status(200).json(endedResponse('session_limit'))
     }
+
+    // Count every valid visitor question, including short-circuited answers.
+    // This executes BEFORE any paid Anthropic request and survives cleared chats.
+    let daily
+    try {
+      daily = await checkDailyQuota(req, res, 'chat')
+    } catch (error) {
+      console.error('Daily chat quota unavailable:', error.message)
+      return res.status(503).json({ error: 'Eve is temporarily unavailable. Please try again shortly.' })
+    }
+    if (!daily.allowed) return quotaError(res, daily.reason)
 
     const similarCount = priorSimilarCount(userMessages)
 
