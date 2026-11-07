@@ -26,7 +26,7 @@ export default async function handler(req,res) {
       }),
       signal:AbortSignal.timeout(8000)
     })
-    if(!result.ok){console.error('Contact email provider rejected request:',result.status);return res.status(502).json({error:'Unable to send your email right now. Please email Ivonne directly.'})}
+    if(!result.ok){const details=await result.json().catch(()=>({}));console.error('Contact email provider rejected request:',result.status,String(details.name||''),String(details.message||'').slice(0,240));return res.status(502).json({error:result.status===403?'Email delivery is not authorized yet. Please email hello@ivonnealdaz.com directly.':'Unable to send your email right now. Please email hello@ivonnealdaz.com directly.'})}
     return res.status(200).json({ok:true})
   }catch(e){console.error('Contact email error:',e.message);return res.status(502).json({error:'Unable to send your email right now. Please email Ivonne directly.'})}
 }
