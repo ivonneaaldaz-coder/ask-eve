@@ -1,4 +1,5 @@
 // Server-side ElevenLabs speech proxy. Voice identity and API key are never supplied by the client.
+const { checkDailyQuota, quotaError } = require('./quota');
 const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'aoA9zgP0GNrBJSEEchPq';
 export default async function handler(req,res) {
   res.setHeader('Cache-Control','no-store');
@@ -8,6 +9,15 @@ export default async function handler(req,res) {
   if(contentLength>7000) return res.status(413).json({error:'Request too large'});
   const text=req.body?.text;
   if(typeof text!=='string'||!text.trim()||text.length>3000) return res.status(400).json({error:'Text must be 1–3000 characters'});
+  // Count voice playback independently from chat; never call paid TTS if quota is exhausted.
+  let daily;
+  try {
+    daily = await checkDailyQuota(req, res, 'voice');
+  } catch (error) {
+    console.error('Daily voice quota unavailable:',error.message);
+    return res.status(503).json({error:'Voice playback is temporarily unavailable. Please try again shortly.'});
+  }
+  if (!daily.allowed) return quotaError(res,daily.reason);
   // Preserve original name in visible answers; apply an audio-only phonetic hint.
   const spoken=text.replace(/\*\*/g,'').replace(/\bIvonne\b/gi,'Eve-on').replace(/\s+/g,' ').trim();
   try{
