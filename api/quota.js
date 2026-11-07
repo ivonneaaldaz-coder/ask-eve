@@ -2,7 +2,7 @@
 // Anonymous signed cookies survive refresh/clear-chat; higher hashed IP and
 // global ceilings limit casual cookie-reset abuse without storing raw IPs.
 const crypto = require('crypto')
-const DAY_SECONDS = 172800
+const WINDOW_SECONDS = 86400 // 24 hours from the first counted request
 const LIMITS = {
   chat: {visitor:30, ip:240, global:1200},
   voice: {visitor:10, ip:80, global:400}
@@ -33,9 +33,9 @@ function hashValue(value,secret){
 }
 const SCRIPT = [
 'local limits={tonumber(ARGV[1]),tonumber(ARGV[2]),tonumber(ARGV[3])}',
-'for i=1,3 do if tonumber(redis.call("GET",KEYS[i]) or "0")>=limits[i] then return i end end',
-'for i=1,3 do local v=redis.call("INCR",KEYS[i]); if v==1 then redis.call("EXPIRE",KEYS[i],172800) end end',
-'return 0'
+'for i=1,3 do if tonumber(redis.call("GET",KEYS[i]) or "0")>=limits[i] then return {i,redis.call("TTL",KEYS[i])} end end',
+'for i=1,3 do local v=redis.call("INCR",KEYS[i]); if v==1 then redis.call("EXPIRE",KEYS[i],86400) end end',
+'return {0,0}'
 ].join('\n')
 async function checkDailyQuota(req,res,kind){
   const limits=LIMITS[kind]
@@ -45,8 +45,9 @@ async function checkDailyQuota(req,res,kind){
   // Use only platform-set proxy headers, never a query parameter or browser-provided identity.
   const ip=String(req.headers['x-vercel-forwarded-for']||req.headers['x-real-ip']||req.socket?.remoteAddress||'unknown').split(',')[0].trim()
   const ipHash=hashValue(ip,secret)
-  const day=new Date().toISOString().slice(0,10)
-  const prefix='ask-eve:q:v1:'+kind+':'+day+':'
+  // Each counter expires 24 hours after its first increment, not at midnight.
+  // v2 isolates rolling counters from the old midnight-reset namespace.
+  const prefix='ask-eve:q:rolling24:v2:'+kind+':'
   const keys=[prefix+'visitor:'+visitor,prefix+'network:'+ipHash,prefix+'overall']
   const command=['EVAL',SCRIPT,'3',...keys,String(limits.visitor),String(limits.ip),String(limits.global)]
   let response
@@ -55,13 +56,15 @@ async function checkDailyQuota(req,res,kind){
   }catch(err){throw new Error('Usage-counter service unreachable: '+err.message)}
   if(!response.ok)throw new Error('Usage-counter status '+response.status)
   const data=await response.json()
-  if(data.error || !Number.isInteger(data.result))throw new Error('Usage-counter rejected atomic operation')
-  return {allowed:data.result===0, reason:['ok','visitor','network','overall'][data.result]||'unknown'}
+  if(data.error || !Array.isArray(data.result) || !Number.isInteger(data.result[0]))throw new Error('Usage-counter rejected atomic operation')
+  const [resultCode,ttlSeconds]=data.result
+  return {allowed:resultCode===0, reason:['ok','visitor','network','overall'][resultCode]||'unknown', retryAfter:Number.isInteger(ttlSeconds)?Math.max(0,ttlSeconds):null}
 }
-function quotaError(res,reason){
+function quotaError(res,reason,retryAfter){
   const personal=reason==='visitor'
+  if(Number.isInteger(retryAfter)&&retryAfter>0)res.setHeader('Retry-After',String(retryAfter))
   const message=personal
-    ? 'You have reached today’s usage limit. Eve will be ready again tomorrow. 🌚'
+    ? 'You’ve reached your 24-hour allowance. Eve will be ready again after your current window resets. 🌚'
     : 'Eve is taking a short usage break to keep access fair for everyone. Please try again later.'
   return res.status(429).json({error:message,code:personal?'daily_limit':'usage_protection'})
 }
